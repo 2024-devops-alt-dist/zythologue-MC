@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"  # Mappe le port local 5432 au port du conteneur
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Volume pour persister les données
+
+volumes:
+  postgres_data:
+    driver: local
