@@ -1,82 +1,3 @@
-DROP TABLE IF EXISTS users, breweries, categories, ingredients, beers, photos, beers_has_ingredients, reviews, favorites CASCADE;
-
-CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
-                       first_name VARCHAR(100) NOT NULL,
-                       email VARCHAR(100) NOT NULL,
-                       password VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE breweries (
-                           id SERIAL PRIMARY KEY,
-                           name VARCHAR(100) NOT NULL,
-                           address VARCHAR(255) NOT NULL,
-                           opening_hours TIMESTAMPTZ NOT NULL,
-                           country VARCHAR(100) NOT NULL,
-                           description VARCHAR(1000) NOT NULL
-);
-
-CREATE TABLE categories (
-                            id SERIAL PRIMARY KEY,
-                            name VARCHAR(100) NOT NULL,
-                            description VARCHAR(1000) NOT NULL
-);
-
-CREATE TABLE ingredients (
-                             id SERIAL PRIMARY KEY,
-                             name VARCHAR(100) NOT NULL,
-                             type VARCHAR(100)
-);
-
-CREATE TABLE beers (
-                       id SERIAL PRIMARY KEY,
-                       name VARCHAR(100) NOT NULL,
-                       description VARCHAR(1000) NOT NULL,
-                       abv INT NOT NULL,
-                       color VARCHAR(100),
-                       quantity INT NOT NULL,
-                       id_category INT NOT NULL,
-                       id_brewery INT NOT NULL,
-                       CONSTRAINT fk_category FOREIGN KEY (id_category) REFERENCES categories (id),
-                       CONSTRAINT fk_brewery FOREIGN KEY (id_brewery) REFERENCES breweries (id)
-);
-
-CREATE TABLE photos (
-                        id SERIAL PRIMARY KEY,
-                        url VARCHAR(255) NOT NULL,
-                        title VARCHAR(100) NOT NULL,
-                        id_beer INT NOT NULL,
-                        CONSTRAINT fk_beer FOREIGN KEY (id_beer) REFERENCES beers (id)
-);
-
-CREATE TABLE beers_has_ingredients (
-                                       id_beer INT NOT NULL,
-                                       id_ingredient INT NOT NULL,
-                                       PRIMARY KEY (id_beer, id_ingredient),
-                                       CONSTRAINT fk_beer FOREIGN KEY (id_beer) REFERENCES beers (id),
-                                       CONSTRAINT fk_ingredient FOREIGN KEY (id_ingredient) REFERENCES ingredients (id)
-);
-
-CREATE TABLE reviews (
-                         id_beer INT NOT NULL,
-                         id_user INT NOT NULL,
-                         name VARCHAR(100) NOT NULL,
-                         description VARCHAR(1000) NOT NULL,
-                         stars INT,
-                         PRIMARY KEY (id_beer, id_user),
-                         CONSTRAINT fk_beer FOREIGN KEY (id_beer) REFERENCES beers (id),
-                         CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users (id)
-);
-
-CREATE TABLE favorites (
-                           id_beer INT NOT NULL,
-                           id_user INT NOT NULL,
-                           PRIMARY KEY (id_beer, id_user),
-                           CONSTRAINT fk_beer FOREIGN KEY (id_beer) REFERENCES beers (id),
-                           CONSTRAINT fk_user FOREIGN KEY (id_user) REFERENCES users (id)
-);
-
-
 
 -- Insertion de données dans la table users
 INSERT INTO users (first_name, email, password)
@@ -162,7 +83,12 @@ VALUES
     ('Summer Ale', 'Light and citrusy ale perfect for warm days.', 4.5, 'Golden', 130, 9, 7),
     ('Tropical IPA', 'Tropical fruit flavors with a hoppy finish.', 6.5, 'Amber', 140, 1, 8),
     ('Arctic Lager', 'Bright and crisp lager inspired by arctic regions.', 4, 'Pale', 180, 3, 9),
-    ('Fruity Wheat Beer', 'Smooth wheat beer with hints of citrus and spice.', 5.5, 'Light', 90, 5, 10);
+    ('Fruity Wheat Beer', 'Smooth wheat beer with hints of citrus and spice.', 5.5, 'Light', 90, 5, 10),
+    ('Summer Blonde', 'A light and refreshing beer, perfect for sunny days.', 5.2, 'Blonde', 100, 1, 1),
+    ('Mountain Brown', 'A rich, intense brown beer with chocolate and coffee notes.', 7.5, 'Brown', 50, 2, 1),
+    ('Hills IPA', 'A hoppy beer with citrus and floral aromas, a bold IPA with character.', 6.8, 'Amber', 75, 3, 1),
+    ('Winter White', 'A smooth white beer with citrus and coriander notes, perfect for winter.', 4.5, 'White', 120, 4, 1),
+    ('Vine Pale Ale', 'A light and refreshing Pale Ale with tropical fruit hints.', 5.0, 'Pale Ale', 80, 5, 1);
 
 -- Insertion de données dans la table photos
 INSERT INTO photos (url, title, id_beer)
@@ -188,9 +114,27 @@ VALUES
 -- Insertion de données dans la table reviews
 INSERT INTO reviews (id_beer, id_user, name, description, stars)
 VALUES
-    (1, 1, 'Great Golden Ale', 'Perfect balance of flavors.', 5),
-    (2, 2, 'Dark and Delicious', 'A stout lover’s dream.', 4),
-    (3, 3, 'Crisp and Refreshing', 'Ideal for summer days.', 5);
+    (1, 4, 'Golden Classic', 'Smooth with a hint of honey.', 4),
+    (1, 5, 'Mellow Golden Ale', 'Too bland for my taste.', 2),
+    (2, 6, 'Dark Velvet', 'Rich and slightly bitter.', 4),
+    (2, 7, 'Chocolate Dream', 'Too sweet for a stout.', 2),
+    (3, 8, 'Zesty Lager', 'Bright citrus notes.', 4),
+    (3, 1, 'Summer Breeze', 'Overly carbonated.', 1),
+    (4, 2, 'Hoppy Delight', 'Too hoppy for me.', 2),
+    (4, 3, 'Bitter Bold IPA', 'Bold flavors for IPA lovers.', 5),
+    (5, 4, 'Amber Essence', 'Malty with a caramel finish.', 4),
+    (5, 5, 'Rich Red Ale', 'Lacks complexity.', 2),
+    (6, 6, 'Classic Wheat', 'Banana and clove aromas.', 4),
+    (6, 7, 'Velvet Wheat', 'Too fruity for a wheat beer.', 1),
+    (7, 8, 'Porter Perfection', 'Deep roasted flavors.', 4),
+    (7, 1, 'Smoky Surprise', 'Too smoky for my liking.', 2),
+    (8, 2, 'Pilsner Pride', 'Crisp, clean, and refreshing.', 4),
+    (8, 3, 'Light and Bright', 'Lacks flavor.', 1),
+    (9, 4, 'Strong Blonde', 'Golden and slightly sweet.', 4),
+    (9, 5, 'Belgian Beauty', 'Overly fruity.', 2),
+    (10, 6, 'Experimental Brew', 'Unique flavors, worth trying.', 3),
+    (10, 7, 'Funky and Fresh', 'Not my cup of tea.', 1);
+
 
 INSERT INTO favorites (id_beer, id_user)
 VALUES
