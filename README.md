@@ -62,3 +62,14 @@ Ouvrir le script request.sql :
 Enfin ouvrez le fichier request.sql de la même manière et sélectionner la requête à lancer.
 
 
+### 5. Retour repo Lucio 
+Travail très propre avec le MCD, MLD, MPD. 
+
+Son readme est bien réddigé malheureusement les lignes de commandes pour éxécuter le script pour les tables avec 
+docker n'ont pas changé et il a oublié d'indiquer qu'il fallait changer de port pouvoir se connecter à sa db depuis DBeaver.  
+
+En ce qui concerne le script, j'ai rencontré quelques difficultés pour créer et insérer la donnée car son script 
+drop table n'est pas sur le même que create et je n'ai pas l'habitude de l'avoir séparé. J'ai du faire une mauvaise 
+manipulation qui m'a fait perdre du temps. Ensuite petit problème aussi d'organisation des tables, il faut lancer 
+les scripts à tour de rôle pour ne pas rencontrer d'erreur lors de l'insertion de données. En ce qui concerne les 
+requêtes aucun vrai souci de rencontrés. 
